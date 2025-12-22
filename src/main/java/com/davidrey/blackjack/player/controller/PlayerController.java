@@ -1,10 +1,10 @@
 package com.davidrey.blackjack.player.controller;
 
+import com.davidrey.blackjack.player.dto.PlayerDto;
+import com.davidrey.blackjack.player.mapper.PlayerControllerMapper;
 import com.davidrey.blackjack.player.service.PlayerService;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
@@ -12,9 +12,16 @@ import java.util.UUID;
 @RestController
 public class PlayerController {
     private final PlayerService service;
+    private final PlayerControllerMapper mapper;
 
-    public PlayerController(PlayerService service) {
+    public PlayerController(PlayerService service, PlayerControllerMapper mapper) {
         this.service = service;
+        this.mapper = mapper;
+    }
+
+    @GetMapping("/ranking")
+    public Flux<PlayerDto> getRanking() {
+        return mapper.toDto(service.getPlayerRanking());
     }
 
     @PutMapping("/player/{id}")

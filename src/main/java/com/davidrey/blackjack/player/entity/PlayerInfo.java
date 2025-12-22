@@ -4,6 +4,7 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Data
@@ -12,6 +13,5 @@ public class PlayerInfo {
     @Id
     private UUID id;
     private String name;
-    private String email;
-    private int phone;
+    private BigDecimal earnings;
 }
