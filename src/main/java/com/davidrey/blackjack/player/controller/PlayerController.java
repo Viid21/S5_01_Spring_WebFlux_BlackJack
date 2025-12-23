@@ -21,7 +21,7 @@ public class PlayerController {
 
     @GetMapping("/ranking")
     public Flux<PlayerDto> getRanking() {
-        return mapper.toDto(service.getPlayerRanking());
+        return mapper.toFluxDto(service.getPlayerRanking());
     }
 
     @PutMapping("/player/{id}")
