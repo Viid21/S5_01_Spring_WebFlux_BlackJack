@@ -10,6 +10,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(PlayerNotFoundException.class)
     public Mono<ResponseEntity<String>> handlePlayerNotFound(PlayerNotFoundException ex) {
-        return Mono.just(ResponseEntity.status(404).body(ex.getMessage()));
+        return Mono.just(ResponseEntity.badRequest().body(ex.getMessage()));
+    }
+
+    @ExceptionHandler(GameNotFoundException.class)
+    public Mono<ResponseEntity<String>> handleGameNotFound(GameNotFoundException ex) {
+        return Mono.just(ResponseEntity.badRequest().body(ex.getMessage()));
     }
 }

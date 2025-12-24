@@ -1,7 +1,6 @@
 package com.davidrey.blackjack.player.service;
 
 import com.davidrey.blackjack.exception.PlayerNotFoundException;
-import com.davidrey.blackjack.player.dto.PlayerDto;
 import com.davidrey.blackjack.player.entity.PlayerInfo;
 import com.davidrey.blackjack.player.repository.PlayerSqlRepository;
 import org.springframework.stereotype.Service;

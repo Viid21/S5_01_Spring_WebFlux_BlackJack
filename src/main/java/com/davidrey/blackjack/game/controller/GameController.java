@@ -3,6 +3,7 @@ package com.davidrey.blackjack.game.controller;
 import com.davidrey.blackjack.game.dto.GameDto;
 import com.davidrey.blackjack.game.mapper.GameControllerMapper;
 import com.davidrey.blackjack.game.service.GameService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -24,7 +25,6 @@ public class GameController {
 
     }
 
-    //Obtenir detalls de la partida
     @GetMapping("/{id}")
     public Mono<GameDto> getGame(@PathVariable UUID id) {
         return mapper.toMonoDto(service.getGameById(id));
@@ -35,10 +35,8 @@ public class GameController {
 
     }
 
-    //Eliminar partida
-    public void deleteGame() {
-
+    @DeleteMapping("/{id}/delete")
+    public Mono<ResponseEntity<Void>> deleteGame(@PathVariable UUID id) {
+        return service.deleteGameById(id);
     }
-
-
 }
