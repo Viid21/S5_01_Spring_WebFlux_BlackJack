@@ -18,23 +18,23 @@ public class PlayerService {
         this.repo = repo;
     }
 
-    /*public Mono<Player> newPlayer(String name){
-        return Mono<Player>
-    }*/
+    public Mono<PlayerInfo> getPlayerForNewGame(String name) {
+        return repo.findByName(name)
+                .switchIfEmpty(repo.save(new PlayerInfo(name)));
+    }
 
-    public Flux<PlayerInfo> getPlayerRanking(){
+    public Flux<PlayerInfo> getPlayerRanking() {
         return repo.findAll()
                 .switchIfEmpty(Mono.error(new PlayerNotFoundException("No one played yet.")))
                 .sort(Comparator.comparing(PlayerInfo::getEarnings).reversed());
     }
 
-    public Mono<String> updateName(UUID id, String name){
+    public Mono<PlayerInfo> updateName(UUID id, String newName) {
         return repo.findById(id)
                 .switchIfEmpty(Mono.error(new PlayerNotFoundException("Player not found with id: " + id)))
                 .flatMap(playerInfo -> {
-                    playerInfo.setName(name);
+                    playerInfo.setName(newName);
                     return repo.save(playerInfo);
-                })
-                .map(PlayerInfo::getName);
+                });
     }
 }

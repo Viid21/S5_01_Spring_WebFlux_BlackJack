@@ -1,6 +1,7 @@
 package com.davidrey.blackjack.player.controller;
 
 import com.davidrey.blackjack.player.dto.PlayerDto;
+import com.davidrey.blackjack.player.entity.PlayerInfo;
 import com.davidrey.blackjack.player.mapper.PlayerControllerMapper;
 import com.davidrey.blackjack.player.service.PlayerService;
 import org.springframework.web.bind.annotation.*;
@@ -21,11 +22,12 @@ public class PlayerController {
 
     @GetMapping("/ranking")
     public Flux<PlayerDto> getRanking() {
-        return mapper.toFluxDto(service.getPlayerRanking());
+        return service.getPlayerRanking()
+                .map(mapper::toDto);
     }
 
     @PutMapping("/player/{id}")
-    public Mono<String> updatePlayerName(@PathVariable UUID id, @RequestBody String name){
+    public Mono<PlayerInfo> updatePlayerName(@PathVariable UUID id, @RequestBody String name){
         return service.updateName(id,name);
     }
 }

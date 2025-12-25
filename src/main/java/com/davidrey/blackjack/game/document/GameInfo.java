@@ -1,10 +1,12 @@
 package com.davidrey.blackjack.game.document;
 
 import com.davidrey.blackjack.deck.model.Card;
+import com.davidrey.blackjack.game.model.GameState;
 import com.davidrey.blackjack.game.model.Winner;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -14,14 +16,16 @@ import java.util.UUID;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Document(collection = "games")
-public class GameResult {
+public class GameInfo {
     @Id
-    private UUID id;
+    private UUID id = UUID.randomUUID();
+    @NonNull
     private UUID playerId;
-    List<Card> playerCards;
-    List<Card> dealerCards;
-    BigDecimal initialBet;
-    Winner winner;
+    private GameState gameState;
+    private List<Card> playerCards;
+    private List<Card> dealerCards;
+    private BigDecimal initialBet;
+    private Winner winner;
 }
