@@ -6,6 +6,7 @@ import com.davidrey.blackjack.player.entity.PlayerInfo;
 public class PlayerControllerMapper {
     public PlayerDto toDto(PlayerInfo player) {
         return new PlayerDto(
+                player.getId(),
                 player.getName(),
                 player.getEarnings()
         );

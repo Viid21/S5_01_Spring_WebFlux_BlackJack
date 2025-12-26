@@ -1,7 +1,6 @@
 package com.davidrey.blackjack.player.controller;
 
 import com.davidrey.blackjack.player.dto.PlayerDto;
-import com.davidrey.blackjack.player.entity.PlayerInfo;
 import com.davidrey.blackjack.player.mapper.PlayerControllerMapper;
 import com.davidrey.blackjack.player.service.PlayerService;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +26,8 @@ public class PlayerController {
     }
 
     @PutMapping("/player/{id}")
-    public Mono<PlayerInfo> updatePlayerName(@PathVariable UUID id, @RequestBody String name){
-        return service.updateName(id,name);
+    public Mono<PlayerDto> updatePlayerName(@PathVariable UUID id, @RequestBody String name){
+        return service.updateName(id,name)
+                .map(mapper::toDto);
     }
 }
