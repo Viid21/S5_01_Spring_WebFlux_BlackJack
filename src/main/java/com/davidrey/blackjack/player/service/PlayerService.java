@@ -1,6 +1,7 @@
 package com.davidrey.blackjack.player.service;
 
-import com.davidrey.blackjack.exception.PlayerNotFoundException;
+import com.davidrey.blackjack.player.exception.EmptyRankingException;
+import com.davidrey.blackjack.player.exception.PlayerNotFoundException;
 import com.davidrey.blackjack.player.entity.PlayerInfo;
 import com.davidrey.blackjack.player.repository.PlayerSqlRepository;
 import org.springframework.stereotype.Service;
@@ -25,13 +26,13 @@ public class PlayerService {
 
     public Flux<PlayerInfo> getPlayerRanking() {
         return repo.findAll()
-                .switchIfEmpty(Mono.error(new PlayerNotFoundException("No one played yet.")))
+                .switchIfEmpty(Mono.error(new EmptyRankingException()))
                 .sort(Comparator.comparing(PlayerInfo::getEarnings).reversed());
     }
 
     public Mono<PlayerInfo> updateName(UUID id, String newName) {
         return repo.findById(id)
-                .switchIfEmpty(Mono.error(new PlayerNotFoundException("Player not found with id: " + id)))
+                .switchIfEmpty(Mono.error(new PlayerNotFoundException(id)))
                 .flatMap(playerInfo -> {
                     playerInfo.setName(newName);
                     return repo.save(playerInfo);

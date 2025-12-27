@@ -1,4 +1,4 @@
-package com.davidrey.blackjack.exception;
+package com.davidrey.blackjack.game.exception;
 
 import java.util.UUID;
 

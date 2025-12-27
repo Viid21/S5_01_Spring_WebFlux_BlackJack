@@ -1,7 +1,9 @@
 package com.davidrey.blackjack.game.controller;
 
-import com.davidrey.blackjack.game.dto.GameDto;
+import com.davidrey.blackjack.game.dto.GameResponse;
+import com.davidrey.blackjack.game.dto.PlayRequest;
 import com.davidrey.blackjack.game.mapper.GameControllerMapper;
+import com.davidrey.blackjack.game.model.PlayerMove;
 import com.davidrey.blackjack.game.service.GameService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,24 +24,25 @@ public class GameController {
     }
 
     @PostMapping("/new")
-    public Mono<ResponseEntity<GameDto>> newGame(@RequestBody String playerName) {
+    public Mono<ResponseEntity<GameResponse>> newGame(@RequestBody String playerName) {
         return service.createNewGame(playerName)
                 .flatMap(gameResult -> {
-                    GameDto dto = mapper.toDto(gameResult);
+                    GameResponse dto = mapper.toDto(gameResult);
                     URI uri = URI.create("/game/" + gameResult.getId());
                     return Mono.just(ResponseEntity.created(uri).body(dto));
                 });
     }
 
     @GetMapping("/{id}")
-    public Mono<GameDto> getGame(@PathVariable UUID id) {
+    public Mono<GameResponse> getGame(@PathVariable UUID id) {
         return service.getGameById(id)
                 .map(mapper::toDto);
     }
 
     @PostMapping("/{id}/play")
-    public void makeMove(@PathVariable UUID id) {
-
+    public Mono<GameResponse> makeMove(@PathVariable UUID id, @RequestBody PlayRequest request) {
+        return service.play(id, request)
+                .map(mapper::toDto);
     }
 
     @DeleteMapping("/{id}/delete")

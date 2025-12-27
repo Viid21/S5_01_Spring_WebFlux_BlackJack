@@ -1,5 +1,6 @@
 package com.davidrey.blackjack.game.document;
 
+import com.davidrey.blackjack.deck.Shoe;
 import com.davidrey.blackjack.deck.model.Card;
 import com.davidrey.blackjack.game.model.GameState;
 import com.davidrey.blackjack.game.model.Winner;
@@ -23,7 +24,10 @@ public class GameInfo {
     private UUID id = UUID.randomUUID();
     @NonNull
     private UUID playerId;
+    @NonNull
     private GameState gameState;
+    @NonNull
+    private Shoe deck;
     private List<Card> playerCards;
     private List<Card> dealerCards;
     private BigDecimal initialBet;

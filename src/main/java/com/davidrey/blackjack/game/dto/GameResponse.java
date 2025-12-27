@@ -7,5 +7,10 @@ import com.davidrey.blackjack.game.model.Winner;
 import java.math.BigDecimal;
 import java.util.List;
 
-public record GameDto(GameState gameState, List<Card> PlayerHand, List<Card> DealerHand, BigDecimal initialBet, Winner winner) {
+public record GameResponse(
+        GameState gameState,
+        List<Card> PlayerHand,
+        List<Card> DealerHand,
+        BigDecimal initialBet,
+        Winner winner) {
 }

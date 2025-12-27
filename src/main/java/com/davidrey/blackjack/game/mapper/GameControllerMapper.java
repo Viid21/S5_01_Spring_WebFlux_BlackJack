@@ -1,11 +1,11 @@
 package com.davidrey.blackjack.game.mapper;
 
 import com.davidrey.blackjack.game.document.GameInfo;
-import com.davidrey.blackjack.game.dto.GameDto;
+import com.davidrey.blackjack.game.dto.GameResponse;
 
 public class GameControllerMapper {
-    public GameDto toDto(GameInfo gameInfo) {
-        return new GameDto(
+    public GameResponse toDto(GameInfo gameInfo) {
+        return new GameResponse(
                 gameInfo.getGameState(),
                 gameInfo.getPlayerCards(),
                 gameInfo.getDealerCards(),
