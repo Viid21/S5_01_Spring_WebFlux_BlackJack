@@ -1,7 +1,6 @@
 package com.davidrey.blackjack.game.service;
 
 import com.davidrey.blackjack.deck.Shoe;
-import com.davidrey.blackjack.game.exception.GameAlreadyEndedException;
 import com.davidrey.blackjack.game.exception.GameNotFoundException;
 import com.davidrey.blackjack.game.document.GameInfo;
 import com.davidrey.blackjack.game.dto.PlayRequest;
@@ -16,11 +15,13 @@ public class GameService {
     private final GameRepository repo;
     private final PlayerService playerService;
     private final GameLogic logic;
+    private final GameCrupier crupier;
 
-    public GameService(GameRepository repo, PlayerService playerService, GameLogic logic) {
+    public GameService(GameRepository repo, PlayerService playerService, GameLogic logic, GameCrupier crupier) {
         this.repo = repo;
         this.playerService = playerService;
         this.logic = logic;
+        this.crupier = crupier;
     }
 
     public Mono<GameInfo> createNewGame(String playerName) {
@@ -38,9 +39,15 @@ public class GameService {
     public Mono<GameInfo> play(UUID id, PlayRequest request) {
         return repo.findById(id)
                 .switchIfEmpty(Mono.error(new GameNotFoundException(id)))
-                .filter(gameInfo -> gameInfo.getWinner() == null)
-                .switchIfEmpty(Mono.error(new GameAlreadyEndedException(id)))
-                .map(gameInfo -> logic.playerActions(gameInfo, request));
+                .map(gameInfo -> logic.play(gameInfo, request))
+                .flatMap(game -> {
+                    if (game.getGameState() == GameState.FINISHED) {
+                        return playerService.updatePlayerEarnings(game.getPlayerId(), crupier.calculateEarnings(game))
+                                .then(repo.save(game));
+                    } else {
+                        return repo.save(game);
+                    }
+                });
     }
 
     public Mono<GameInfo> getGameById(UUID id) {

@@ -15,6 +15,7 @@ public class Shoe {
             Deck deck = new Deck();
             cards.addAll(deck.getCards());
         }
+        shuffle();
     }
 
     public void shuffle() {

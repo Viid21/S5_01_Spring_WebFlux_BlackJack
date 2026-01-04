@@ -6,5 +6,6 @@ import java.math.BigDecimal;
 
 public record PlayRequest(
         PlayerMove move,
+        Integer handIndex,
         BigDecimal amount) {
 }

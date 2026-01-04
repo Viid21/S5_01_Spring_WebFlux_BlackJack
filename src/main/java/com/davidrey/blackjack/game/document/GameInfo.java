@@ -1,9 +1,8 @@
 package com.davidrey.blackjack.game.document;
 
 import com.davidrey.blackjack.deck.Shoe;
-import com.davidrey.blackjack.deck.model.Card;
 import com.davidrey.blackjack.game.model.GameState;
-import com.davidrey.blackjack.game.model.Winner;
+import com.davidrey.blackjack.game.model.Hand;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -28,8 +27,7 @@ public class GameInfo {
     private GameState gameState;
     @NonNull
     private Shoe deck;
-    private List<Card> playerCards;
-    private List<Card> dealerCards;
-    private BigDecimal initialBet;
-    private Winner winner;
+    private List<Hand> playerHands;
+    private Hand dealerHand;
+    private BigDecimal insurance;
 }

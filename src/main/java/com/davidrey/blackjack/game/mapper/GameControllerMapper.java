@@ -7,10 +7,8 @@ public class GameControllerMapper {
     public GameResponse toDto(GameInfo gameInfo) {
         return new GameResponse(
                 gameInfo.getGameState(),
-                gameInfo.getPlayerCards(),
-                gameInfo.getDealerCards(),
-                gameInfo.getInitialBet(),
-                gameInfo.getWinner()
+                gameInfo.getPlayerHands(),
+                gameInfo.getDealerHand()
         );
     }
 }

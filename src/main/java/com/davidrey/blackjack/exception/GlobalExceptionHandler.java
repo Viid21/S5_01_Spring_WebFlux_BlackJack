@@ -1,8 +1,8 @@
 package com.davidrey.blackjack.exception;
 
-import com.davidrey.blackjack.game.exception.GameAlreadyEndedException;
 import com.davidrey.blackjack.game.exception.GameNotFoundException;
 import com.davidrey.blackjack.game.exception.IllegalBetException;
+import com.davidrey.blackjack.game.exception.IllegalMoveException;
 import com.davidrey.blackjack.player.exception.EmptyRankingException;
 import com.davidrey.blackjack.player.exception.PlayerNotFoundException;
 import org.springframework.http.ResponseEntity;
@@ -28,13 +28,13 @@ public class GlobalExceptionHandler {
         return Mono.just(ResponseEntity.badRequest().body(ex.getMessage()));
     }
 
-    @ExceptionHandler(GameAlreadyEndedException.class)
-    public Mono<ResponseEntity<String>> handleGameAlreadyEnded(GameAlreadyEndedException ex) {
+    @ExceptionHandler(IllegalBetException.class)
+    public Mono<ResponseEntity<String>> handleIllegalBet(IllegalBetException ex) {
         return Mono.just(ResponseEntity.badRequest().body(ex.getMessage()));
     }
 
-    @ExceptionHandler(IllegalBetException.class)
-    public Mono<ResponseEntity<String>> handleIllegalBet(IllegalBetException ex) {
+    @ExceptionHandler(IllegalMoveException.class)
+    public Mono<ResponseEntity<String>> handleIllegalMove(IllegalMoveException ex) {
         return Mono.just(ResponseEntity.badRequest().body(ex.getMessage()));
     }
 }

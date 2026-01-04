@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.UUID;
 
@@ -37,5 +38,14 @@ public class PlayerService {
                     playerInfo.setName(newName);
                     return repo.save(playerInfo);
                 });
+    }
+
+    public Mono<Void> updatePlayerEarnings(UUID id, BigDecimal amount) {
+        return repo.findById(id)
+                .flatMap(player -> {
+                    player.setEarnings(player.getEarnings().add(amount));
+                    return repo.save(player);
+                })
+                .then();
     }
 }
