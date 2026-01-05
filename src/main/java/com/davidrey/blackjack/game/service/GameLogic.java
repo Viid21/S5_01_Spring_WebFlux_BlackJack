@@ -1,6 +1,6 @@
 package com.davidrey.blackjack.game.service;
 
-import com.davidrey.blackjack.game.document.GameInfo;
+import com.davidrey.blackjack.game.model.Game;
 import com.davidrey.blackjack.game.dto.PlayRequest;
 
 public class GameLogic {
@@ -12,17 +12,17 @@ public class GameLogic {
         this.flow = flow;
     }
 
-    public GameInfo play(GameInfo gameInfo, PlayRequest request) {
-        flow.validateGameState(gameInfo);
+    public Game play(Game game, PlayRequest request) {
+        flow.validateGameState(game);
 
-        actions.apply(gameInfo, request);
+        actions.apply(game, request);
 
-        if (flow.allHandsFinished(gameInfo)) {
-            flow.dealerTurn(gameInfo);
-            flow.resolveWinners(gameInfo);
+        if (flow.allHandsFinished(game)) {
+            flow.dealerTurn(game);
+            flow.resolveWinners(game);
         }
 
-        return gameInfo;
+        return game;
     }
 
 }

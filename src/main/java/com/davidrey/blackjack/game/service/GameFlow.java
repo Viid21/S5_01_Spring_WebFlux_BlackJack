@@ -1,6 +1,6 @@
 package com.davidrey.blackjack.game.service;
 
-import com.davidrey.blackjack.game.document.GameInfo;
+import com.davidrey.blackjack.game.model.Game;
 import com.davidrey.blackjack.game.exception.IllegalMoveException;
 import com.davidrey.blackjack.game.model.GameState;
 import com.davidrey.blackjack.game.model.Hand;
@@ -8,18 +8,18 @@ import com.davidrey.blackjack.game.model.HandState;
 import com.davidrey.blackjack.game.model.Winner;
 
 public class GameFlow {
-    public void validateGameState(GameInfo game) {
+    public void validateGameState(Game game) {
         if (game.getGameState() == GameState.FINISHED) {
             throw new IllegalMoveException();
         }
     }
 
-    public boolean allHandsFinished(GameInfo game) {
+    public boolean allHandsFinished(Game game) {
         return game.getPlayerHands().stream()
                 .allMatch(Hand::isFinished);
     }
 
-    public void dealerTurn(GameInfo game) {
+    public void dealerTurn(Game game) {
         Hand dealer = game.getDealerHand();
 
         while (dealer.calculateHandValue() < 17) {
@@ -29,7 +29,7 @@ public class GameFlow {
         dealer.validateBust();
     }
 
-    public void resolveWinners(GameInfo game) {
+    public void resolveWinners(Game game) {
         int dealerValue = game.getDealerHand().calculateHandValue();
         boolean dealerBust = dealerValue > 21;
 

@@ -1,14 +1,11 @@
-package com.davidrey.blackjack.game.document;
+package com.davidrey.blackjack.game.model;
 
 import com.davidrey.blackjack.deck.Shoe;
-import com.davidrey.blackjack.game.model.GameState;
-import com.davidrey.blackjack.game.model.Hand;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -18,8 +15,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @RequiredArgsConstructor
-@Document(collection = "games")
-public class GameInfo {
+public class Game {
     @Id
     private UUID id = UUID.randomUUID();
     @NonNull

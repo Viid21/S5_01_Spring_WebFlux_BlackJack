@@ -3,7 +3,6 @@ package com.davidrey.blackjack.game.controller;
 import com.davidrey.blackjack.game.dto.GameResponse;
 import com.davidrey.blackjack.game.dto.PlayRequest;
 import com.davidrey.blackjack.game.mapper.GameControllerMapper;
-import com.davidrey.blackjack.game.model.PlayerMove;
 import com.davidrey.blackjack.game.service.GameService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -23,10 +23,6 @@ public class Shoe {
     }
 
     public Card draw() {
-        return cards.removeFirst();
-    }
-
-    public int size() {
-        return cards.size();
+        return cards.remove(0);
     }
 }

@@ -1,6 +1,6 @@
 package com.davidrey.blackjack.game.service;
 
-import com.davidrey.blackjack.game.document.GameInfo;
+import com.davidrey.blackjack.game.model.Game;
 import com.davidrey.blackjack.game.model.Hand;
 import com.davidrey.blackjack.game.model.HandState;
 
@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 public class GameCrupier {
-    public BigDecimal calculateEarnings(GameInfo game) {
+    public BigDecimal calculateEarnings(Game game) {
         BigDecimal total = BigDecimal.ZERO;
 
         for (Hand hand : game.getPlayerHands()) {

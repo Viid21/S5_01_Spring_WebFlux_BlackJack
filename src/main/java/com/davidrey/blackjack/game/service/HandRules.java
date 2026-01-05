@@ -3,7 +3,6 @@ package com.davidrey.blackjack.game.service;
 import com.davidrey.blackjack.deck.model.Rank;
 import com.davidrey.blackjack.game.exception.IllegalBetException;
 import com.davidrey.blackjack.game.exception.IllegalMoveException;
-import com.davidrey.blackjack.game.model.GameState;
 import com.davidrey.blackjack.game.model.Hand;
 import com.davidrey.blackjack.game.model.HandState;
 
@@ -49,11 +48,7 @@ public class HandRules {
         }
     }
 
-    public void validateInsurance(GameState gameState, BigDecimal originalBet, BigDecimal insuranceAmount) {
-        if (gameState != GameState.OFFER_INSURANCE) {
-            throw new IllegalMoveException();
-        }
-
+    public void validateInsurance(BigDecimal originalBet, BigDecimal insuranceAmount) {
         validateBasicBet(insuranceAmount);
         BigDecimal halfBet = originalBet
                 .divide(BigDecimal.valueOf(2), RoundingMode.DOWN);
@@ -65,7 +60,7 @@ public class HandRules {
 
     public HandState splitAceVerification(Hand hand) {
         if (hand.getCards().getFirst().rank().equals(Rank.ACE)) {
-            return HandState.BUST;
+            return HandState.STAND;
         }
         return HandState.ACTIVE;
     }

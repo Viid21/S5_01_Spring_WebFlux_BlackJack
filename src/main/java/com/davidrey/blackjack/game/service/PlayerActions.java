@@ -1,7 +1,7 @@
 package com.davidrey.blackjack.game.service;
 
 import com.davidrey.blackjack.deck.model.Rank;
-import com.davidrey.blackjack.game.document.GameInfo;
+import com.davidrey.blackjack.game.model.Game;
 import com.davidrey.blackjack.game.dto.PlayRequest;
 import com.davidrey.blackjack.game.exception.IllegalMoveException;
 import com.davidrey.blackjack.game.model.GameState;
@@ -19,7 +19,7 @@ public class PlayerActions {
         this.rules = rules;
     }
 
-    public void apply(GameInfo game, PlayRequest request) {
+    public void apply(Game game, PlayRequest request) {
         switch (request.move()) {
             case INITIAL_BET -> setInitialBet(game, request.amount());
             case HIT -> hit(game, request);
@@ -31,12 +31,12 @@ public class PlayerActions {
         }
     }
 
-    public void setInitialBet(GameInfo game, BigDecimal amount) {
-        rules.validateBasicBet(amount);
-
-        if (!game.getPlayerHands().isEmpty()) {
+    public void setInitialBet(Game game, BigDecimal amount) {
+        if (game.getGameState() != GameState.NEED_INITIAL_BET) {
             throw new IllegalMoveException();
         }
+
+        rules.validateBasicBet(amount);
 
         Hand playerHand = new Hand();
         playerHand.setBet(amount);
@@ -57,31 +57,42 @@ public class PlayerActions {
         }
     }
 
-    public void hit(GameInfo game, PlayRequest request) {
+    public void hit(Game game, PlayRequest request) {
+        if (game.getGameState() != GameState.NEED_PLAYER_MOVE) {
+            throw new IllegalMoveException();
+        }
+
         Hand hand = game.getPlayerHands().get(request.handIndex());
         rules.validateHandPlayable(hand);
 
         hand.addCard(game.getDeck().draw());
     }
 
-    public void stand(GameInfo game, PlayRequest request) {
+    public void stand(Game game, PlayRequest request) {
+        if (game.getGameState() != GameState.NEED_PLAYER_MOVE) {
+            throw new IllegalMoveException();
+        }
+
         Hand hand = game.getPlayerHands().get(request.handIndex());
         rules.validateHandPlayable(hand);
 
         hand.setState(HandState.STAND);
     }
 
-    public void split(GameInfo game, PlayRequest request) {
+    public void split(Game game, PlayRequest request) {
+        if (game.getGameState() != GameState.NEED_PLAYER_MOVE) {
+            throw new IllegalMoveException();
+        }
+
         Hand originalHand = game.getPlayerHands().get(request.handIndex());
         BigDecimal originalBet = originalHand.getBet();
 
         rules.validateSplit(originalHand, request.amount(), originalBet);
 
-        Hand newHand = new Hand(
-                List.of(originalHand.getCards().getLast()),
-                HandState.ACTIVE,
-                request.amount()
-        );
+        Hand newHand = new Hand();
+        newHand.setCards(List.of(originalHand.getCards().getLast()));
+        newHand.setState(HandState.ACTIVE);
+        newHand.setBet(request.amount());
 
         originalHand.getCards().removeLast();
         originalHand.addCard(game.getDeck().draw());
@@ -93,7 +104,11 @@ public class PlayerActions {
         game.getPlayerHands().add(newHand);
     }
 
-    public void dobleDown(GameInfo game, PlayRequest request) {
+    public void dobleDown(Game game, PlayRequest request) {
+        if (game.getGameState() != GameState.NEED_PLAYER_MOVE) {
+            throw new IllegalMoveException();
+        }
+
         Hand hand = game.getPlayerHands().get(request.handIndex());
         BigDecimal originalBet = hand.getBet();
 
@@ -104,19 +119,29 @@ public class PlayerActions {
         hand.setState(HandState.STAND);
     }
 
-    public void insurance(GameInfo game, PlayRequest request) {
+    public void insurance(Game game, PlayRequest request) {
+        if (game.getGameState() != GameState.OFFER_INSURANCE) {
+            throw new IllegalMoveException();
+        }
+
         Hand hand = game.getPlayerHands().get(request.handIndex());
         BigDecimal originalBet = hand.getBet();
 
-        rules.validateInsurance(game.getGameState(), originalBet, request.amount());
+        rules.validateInsurance(originalBet, request.amount());
 
         game.setInsurance(request.amount());
+        game.setGameState(GameState.NEED_PLAYER_MOVE);
     }
 
-    public void surrender(GameInfo game, PlayRequest request) {
+    public void surrender(Game game, PlayRequest request) {
+        if (game.getGameState() != GameState.NEED_PLAYER_MOVE) {
+            throw new IllegalMoveException();
+        }
+
         Hand hand = game.getPlayerHands().get(request.handIndex());
         rules.validateHandPlayable(hand);
 
+        hand.setState(HandState.STAND);
         hand.setWinner(Winner.SURRENDER);
     }
 }

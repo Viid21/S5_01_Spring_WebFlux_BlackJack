@@ -4,6 +4,7 @@ import com.davidrey.blackjack.deck.Shoe;
 import com.davidrey.blackjack.game.exception.GameNotFoundException;
 import com.davidrey.blackjack.game.document.GameInfo;
 import com.davidrey.blackjack.game.dto.PlayRequest;
+import com.davidrey.blackjack.game.mapper.GameServiceMapper;
 import com.davidrey.blackjack.game.model.GameState;
 import com.davidrey.blackjack.game.repository.GameRepository;
 import com.davidrey.blackjack.player.service.PlayerService;
@@ -16,12 +17,14 @@ public class GameService {
     private final PlayerService playerService;
     private final GameLogic logic;
     private final GameCrupier crupier;
+    private final GameServiceMapper mapper;
 
-    public GameService(GameRepository repo, PlayerService playerService, GameLogic logic, GameCrupier crupier) {
+    public GameService(GameRepository repo, PlayerService playerService, GameLogic logic, GameCrupier crupier, GameServiceMapper mapper) {
         this.repo = repo;
         this.playerService = playerService;
         this.logic = logic;
         this.crupier = crupier;
+        this.mapper = mapper;
     }
 
     public Mono<GameInfo> createNewGame(String playerName) {
@@ -39,13 +42,13 @@ public class GameService {
     public Mono<GameInfo> play(UUID id, PlayRequest request) {
         return repo.findById(id)
                 .switchIfEmpty(Mono.error(new GameNotFoundException(id)))
-                .map(gameInfo -> logic.play(gameInfo, request))
+                .map(gameInfo -> logic.play(mapper.toGame(gameInfo), request))
                 .flatMap(game -> {
                     if (game.getGameState() == GameState.FINISHED) {
                         return playerService.updatePlayerEarnings(game.getPlayerId(), crupier.calculateEarnings(game))
-                                .then(repo.save(game));
+                                .then(repo.save(mapper.toInfo(game)));
                     } else {
-                        return repo.save(game);
+                        return repo.save(mapper.toInfo(game));
                     }
                 });
     }

@@ -12,13 +12,9 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class Hand {
-    @NonNull
     private List<Card> cards;
-    @NonNull
     private HandState state;
-    @NonNull
     private BigDecimal bet;
     private Winner winner;
 
@@ -56,7 +52,7 @@ public class Hand {
         }
     }
     public void validateNatBj() {
-        if (cards.size() == 2 && calculateHandValue() > 21) {
+        if (cards.size() == 2 && calculateHandValue() == 21) {
             this.state = HandState.NAT_BJ;
         }
     }
