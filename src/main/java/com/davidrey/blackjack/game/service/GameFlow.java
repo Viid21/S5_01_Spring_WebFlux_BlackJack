@@ -6,7 +6,9 @@ import com.davidrey.blackjack.game.model.GameState;
 import com.davidrey.blackjack.game.model.Hand;
 import com.davidrey.blackjack.game.model.HandState;
 import com.davidrey.blackjack.game.model.Winner;
+import org.springframework.stereotype.Service;
 
+@Service
 public class GameFlow {
     public void validateGameState(Game game) {
         if (game.getGameState() == GameState.FINISHED) {

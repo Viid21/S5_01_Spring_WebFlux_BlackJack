@@ -7,6 +7,6 @@ import java.util.List;
 
 public record GameResponse(
         GameState gameState,
-        List<Hand> PlayerHand,
+        List<Hand> PlayerHands,
         Hand DealerHand) {
 }

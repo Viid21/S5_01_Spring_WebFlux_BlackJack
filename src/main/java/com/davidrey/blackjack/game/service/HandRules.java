@@ -5,10 +5,12 @@ import com.davidrey.blackjack.game.exception.IllegalBetException;
 import com.davidrey.blackjack.game.exception.IllegalMoveException;
 import com.davidrey.blackjack.game.model.Hand;
 import com.davidrey.blackjack.game.model.HandState;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+@Service
 public class HandRules {
     public void validateBasicBet(BigDecimal amount) {
         if (amount == null || amount.compareTo(BigDecimal.ONE) < 0) {

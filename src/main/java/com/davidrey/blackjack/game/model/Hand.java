@@ -4,18 +4,17 @@ import com.davidrey.blackjack.deck.model.Card;
 import com.davidrey.blackjack.deck.model.Rank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 public class Hand {
-    private List<Card> cards;
-    private HandState state;
-    private BigDecimal bet;
+    private List<Card> cards = new ArrayList<>();
+    private HandState state = HandState.ACTIVE;
+    private BigDecimal bet = BigDecimal.ZERO;
     private Winner winner;
 
     public void addCard(Card card) {

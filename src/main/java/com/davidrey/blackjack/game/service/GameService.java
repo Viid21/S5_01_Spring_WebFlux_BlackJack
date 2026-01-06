@@ -8,10 +8,12 @@ import com.davidrey.blackjack.game.mapper.GameServiceMapper;
 import com.davidrey.blackjack.game.model.GameState;
 import com.davidrey.blackjack.game.repository.GameRepository;
 import com.davidrey.blackjack.player.service.PlayerService;
+import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
+@Service
 public class GameService {
     private final GameRepository repo;
     private final PlayerService playerService;

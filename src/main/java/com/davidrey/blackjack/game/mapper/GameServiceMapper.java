@@ -2,7 +2,9 @@ package com.davidrey.blackjack.game.mapper;
 
 import com.davidrey.blackjack.game.document.GameInfo;
 import com.davidrey.blackjack.game.model.Game;
+import org.springframework.stereotype.Component;
 
+@Component
 public class GameServiceMapper {
     public Game toGame (GameInfo info){
         Game game = new Game();

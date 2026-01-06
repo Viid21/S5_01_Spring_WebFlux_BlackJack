@@ -2,7 +2,9 @@ package com.davidrey.blackjack.game.service;
 
 import com.davidrey.blackjack.game.model.Game;
 import com.davidrey.blackjack.game.dto.PlayRequest;
+import org.springframework.stereotype.Service;
 
+@Service
 public class GameLogic {
     private final PlayerActions actions;
     private final GameFlow flow;

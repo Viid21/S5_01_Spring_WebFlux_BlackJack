@@ -8,10 +8,13 @@ import com.davidrey.blackjack.game.model.GameState;
 import com.davidrey.blackjack.game.model.Hand;
 import com.davidrey.blackjack.game.model.HandState;
 import com.davidrey.blackjack.game.model.Winner;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class PlayerActions {
     private final HandRules rules;
 
@@ -90,7 +93,7 @@ public class PlayerActions {
         rules.validateSplit(originalHand, request.amount(), originalBet);
 
         Hand newHand = new Hand();
-        newHand.setCards(List.of(originalHand.getCards().getLast()));
+        newHand.setCards(new ArrayList<>(List.of(originalHand.getCards().getLast())));
         newHand.setState(HandState.ACTIVE);
         newHand.setBet(request.amount());
 
