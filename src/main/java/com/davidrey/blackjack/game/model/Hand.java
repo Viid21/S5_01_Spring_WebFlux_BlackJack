@@ -2,6 +2,7 @@ package com.davidrey.blackjack.game.model;
 
 import com.davidrey.blackjack.deck.model.Card;
 import com.davidrey.blackjack.deck.model.Rank;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,10 +12,31 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
+@Schema(description = "Represents a single blackjack hand.")
 public class Hand {
+
+    @Schema(
+            description = "List of cards in the hand.",
+            implementation = Card.class
+    )
     private List<Card> cards = new ArrayList<>();
+
+    @Schema(
+            description = "Current state of the hand.",
+            implementation = HandState.class
+    )
     private HandState state = HandState.ACTIVE;
+
+    @Schema(
+            description = "Bet amount associated with this hand.",
+            example = "20.00"
+    )
     private BigDecimal bet = BigDecimal.ZERO;
+
+    @Schema(
+            description = "Winner of this hand after the game ends.",
+            implementation = Winner.class
+    )
     private Winner winner;
 
     public void addCard(Card card) {
