@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+  blackjack-app:
+    build: .
+    container_name: blackjack-app
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/blackjack
+      SPRING_R2DBC_URL: r2dbc:postgresql://postgres:5432/blackjack
+      SPRING_R2DBC_USERNAME: postgres
+      SPRING_R2DBC_PASSWORD: postgres
+    depends_on:
+      - mongo
+      - postgres
+
+  mongo:
+    image: mongo:7
+    container_name: blackjack-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  postgres:
+    image: postgres:16
+    container_name: blackjack-postgres
+    environment:
+      POSTGRES_DB: blackjack
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  mongo_data:
+  postgres_data:
