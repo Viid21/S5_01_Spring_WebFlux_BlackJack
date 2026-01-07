@@ -46,7 +46,7 @@ public class GameController {
 
     @DeleteMapping("/{id}/delete")
     public Mono<ResponseEntity<Void>> deleteGame(@PathVariable UUID id) {
-        service.deleteGameById(id);
-        return Mono.just(ResponseEntity.noContent().build());
+        return service.deleteGameById(id)
+                .then(Mono.just(ResponseEntity.noContent().build()));
     }
 }
