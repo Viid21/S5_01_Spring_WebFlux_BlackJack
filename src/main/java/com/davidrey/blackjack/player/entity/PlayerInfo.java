@@ -16,7 +16,7 @@ import java.util.UUID;
 @Table("player_info")
 public class PlayerInfo {
     @Id
-    private UUID id = UUID.randomUUID();
+    private UUID id;
     @NonNull
     private String name;
     private BigDecimal earnings = BigDecimal.valueOf(0);
