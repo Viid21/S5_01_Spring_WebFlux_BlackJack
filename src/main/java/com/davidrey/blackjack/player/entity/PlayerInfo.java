@@ -12,12 +12,18 @@ import java.util.UUID;
 
 @Data
 @NoArgsConstructor
-@RequiredArgsConstructor
 @Table("player_info")
 public class PlayerInfo {
+
     @Id
-    private UUID id;
-    @NonNull
+    private UUID id; // sense inicialitzar
+
     private String name;
-    private BigDecimal earnings = BigDecimal.valueOf(0);
+
+    private BigDecimal earnings;
+
+    public PlayerInfo(String name) {
+        this.name = name;
+        this.earnings = BigDecimal.ZERO;
+    }
 }
