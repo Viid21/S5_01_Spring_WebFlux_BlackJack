@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -24,6 +25,7 @@ public class PlayerController {
         this.service = service;
         this.mapper = mapper;
     }
+
     @Operation(
             summary = "Get player ranking",
             description = "Returns a list of players ordered by their earnings."
@@ -54,11 +56,16 @@ public class PlayerController {
     )
     @ApiResponse(
             responseCode = "404",
-            description = "Player not found"
+            description = "Player not found",
+            content = @Content(schema = @Schema(hidden = true))
     )
-    @PutMapping("/player/{id}")
-    public Mono<PlayerDto> updatePlayerName(@PathVariable UUID id, @RequestBody String name){
-        return service.updateName(id,name)
+    @PutMapping(
+            value = "/player/{id}",
+            consumes = MediaType.TEXT_PLAIN_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public Mono<PlayerDto> updatePlayerName(@PathVariable UUID id, @RequestBody String name) {
+        return service.updateName(id, name)
                 .map(mapper::toDto);
     }
 }
