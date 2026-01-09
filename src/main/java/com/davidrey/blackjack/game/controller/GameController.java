@@ -8,7 +8,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
@@ -32,18 +34,27 @@ public class GameController {
             summary = "Create a new game",
             description = "Starts a new blackjack game for the specified player."
     )
-    @ApiResponse(
-            responseCode = "201",
-            description = "Game created successfully",
-            content = @Content(schema = @Schema(implementation = GameResponse.class))
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Game created successfully",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = GameResponse.class)
+                    )
+            )
+    })
+    @PostMapping(
+            value = "/new",
+            consumes = MediaType.TEXT_PLAIN_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
     )
-    @PostMapping("/new")
     public Mono<ResponseEntity<GameResponse>> newGame(@RequestBody String playerName) {
         return service.createNewGame(playerName)
-                .flatMap(gameResult -> {
+                .map(gameResult -> {
                     GameResponse dto = mapper.toDto(gameResult);
                     URI uri = URI.create("/game/" + gameResult.getId());
-                    return Mono.just(ResponseEntity.created(uri).body(dto));
+                    return ResponseEntity.created(uri).body(dto);
                 });
     }
 
@@ -51,16 +62,25 @@ public class GameController {
             summary = "Get game state",
             description = "Returns the current state of the game with the specified ID."
     )
-    @ApiResponse(
-            responseCode = "200",
-            description = "Game retrieved successfully",
-            content = @Content(schema = @Schema(implementation = GameResponse.class))
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Game retrieved successfully",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = GameResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Game not found",
+                    content = @Content(schema = @Schema(hidden = true))
+            )
+    })
+    @GetMapping(
+            value = "/{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE
     )
-    @ApiResponse(
-            responseCode = "404",
-            description = "Game not found"
-    )
-    @GetMapping("/{id}")
     public Mono<GameResponse> getGame(@PathVariable UUID id) {
         return service.getGameById(id)
                 .map(mapper::toDto);
@@ -70,24 +90,31 @@ public class GameController {
             summary = "Make a move",
             description = "Allows the player to perform a move such as HIT, STAND, SPLIT, DOUBLE, INSURANCE, or SURRENDER."
     )
-    @ApiResponse(
-            responseCode = "200",
-            description = "Move applied successfully",
-            content = @Content(schema = @Schema(implementation = GameResponse.class))
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Move applied successfully",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = GameResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid move or invalid bet",
+                    content = @Content(schema = @Schema(hidden = true))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Game not found",
+                    content = @Content(schema = @Schema(hidden = true))
+            )
+    })
+    @PostMapping(
+            value = "/{id}/play",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
     )
-    @ApiResponse(
-            responseCode = "400",
-            description = "Invalid move"
-    )
-    @ApiResponse(
-            responseCode = "400",
-            description = "Invalid bet"
-    )
-    @ApiResponse(
-            responseCode = "404",
-            description = "Game not found"
-    )
-    @PostMapping("/{id}/play")
     public Mono<GameResponse> makeMove(@PathVariable UUID id, @RequestBody PlayRequest request) {
         return service.play(id, request)
                 .map(mapper::toDto);
@@ -97,17 +124,24 @@ public class GameController {
             summary = "Delete a game",
             description = "Deletes the game with the specified ID."
     )
-    @ApiResponse(
-            responseCode = "204",
-            description = "Game deleted successfully"
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "Game deleted successfully",
+                    content = @Content(schema = @Schema(hidden = true))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Game not found",
+                    content = @Content(schema = @Schema(hidden = true))
+            )
+    })
+    @DeleteMapping(
+            value = "/{id}/delete",
+            produces = MediaType.APPLICATION_JSON_VALUE
     )
-    @ApiResponse(
-            responseCode = "404",
-            description = "Game not found"
-    )
-    @DeleteMapping("/{id}/delete")
     public Mono<ResponseEntity<Void>> deleteGame(@PathVariable UUID id) {
         return service.deleteGameById(id)
-                .then(Mono.just(ResponseEntity.noContent().build()));
+                .thenReturn(ResponseEntity.noContent().build());
     }
 }
